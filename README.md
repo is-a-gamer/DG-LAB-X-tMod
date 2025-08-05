@@ -46,7 +46,7 @@
 
 波形要求:
 
-*（请不要在C:\Users\Administrator\Documents\My Games\Terraria\tModLoader\ModConfigs\DGLAB_MainConfig.json当中进行修改）*
+*（请不要在C:\Users\Administrator\Documents\My Games\Terraria\tModLoader\ModConfigs\DGLABtMod_MainConfig.json当中进行修改）*
 
 如图
 
@@ -179,5 +179,6 @@ protected override void OnMessage(MessageEventArgs e)//处理来自 App 的消�
 **暂不支持退款**。
 
 [查看赞助名单](https://github.com/ylLty/DG-LAB-X-tMod/blob/main/%E8%B5%9E%E5%8A%A9%E5%90%8D%E5%8D%95.md)
+
 
 ![Donate](https://github.com/ylLty/DG-LAB-X-tMod/blob/main/%E8%B5%9E%E5%8A%A9Donate.jpg?raw=true)

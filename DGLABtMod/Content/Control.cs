@@ -407,28 +407,50 @@ public class ControlBuff : GlobalBuff//用于检测受伤事件
     public static bool IsReadWarn = false;//用于判断用户是否已阅读安全警示
     public static void LoadConfig()//每当加载配置和保存配置的时，都会调用这个函数.用于读取配置的json文件并将配置加载到内存中(防止疯狂读取硬盘造成卡顿)
     {
-        //Configs config = null;
-        //AddWeakReference("QRCoder");
+    try
+    {
         string DocumentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);//获取文档文件夹路径
         string JsonPath = DocumentsPath + "\\My Games\\Terraria\\tModLoader\\ModConfigs\\DGLABtMod_MainConfig.json";//补全配置文件完整的路径
-        string ConfigJson = File.ReadAllText(JsonPath);//将配置中的文本内容加载到ConfigJson里
-
-        //config = System.Text.Json.JsonSerializer.Deserialize<Configs>(ConfigJson);
+        if (!File.Exists(JsonPath))
+        {
+            ConfigStore.Current = System.Text.Json.JsonSerializer.Deserialize<Configs>("{}");//加载默认值
+            goto Start;
+        }
+        string ConfigJson;
+        try
+        {
+            ConfigJson = File.ReadAllText(JsonPath);//将配置中的文本内容加载到ConfigJson里
+        }
+        catch
+        {
+            goto Start;
+        }
+        if (string.IsNullOrEmpty(ConfigJson))
+        {
+            goto Start;
+        }
         ConfigStore.Current = System.Text.Json.JsonSerializer.Deserialize<Configs>(ConfigJson);//加载到内存中
-
 
         Debug.DebugSendMsg("调试模式已启动", 255, 255, 255);
         Main.NewText("DGLAB:新配置已加载");
-            
-        if(ConfigStore.Current.WARN&& ConfigStore.Current.WARN1&&ConfigStore.Current.WARN2 && ConfigStore.Current.WARN3 && ConfigStore.Current.WARN4)
+    }
+    catch(Exception ex)
+    {
+        Main.NewText("DGLAB:配置加载失败："+ex,255);
+        goto Start;
+    }
+    Start:
+    try
+    {
+        if (ConfigStore.Current.WARN && ConfigStore.Current.WARN1 && ConfigStore.Current.WARN2 && ConfigStore.Current.WARN3 && ConfigStore.Current.WARN4)
         {
-            IsReadWarn =true;
+            IsReadWarn = true;
         }
         else//v1.0.1新增代码
         {
             IsReadWarn = false;
         }
-        
+
         if (!ConfigStore.Current.A)//启用通道判断
         {
             ConfigStore.Current.MaxA = 0;
@@ -439,6 +461,8 @@ public class ControlBuff : GlobalBuff//用于检测受伤事件
             ConfigStore.Current.MaxB = 0;
             ConfigStore.Current.LowB = 0;
         }
+    }
+    catch { }
     }
         public static int t = 0;
     public override void Update(int type, Player player, ref int buffIndex)
@@ -573,3 +597,4 @@ public class ControlBuff : GlobalBuff//用于检测受伤事件
     }
 
 }
+
